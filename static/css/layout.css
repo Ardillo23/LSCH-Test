@@ -1,0 +1,29 @@
+body {
+    background-color: rgba(217, 232, 136, 0.71);
+}
+
+h1 {
+    color: rgb(40, 30, 30);
+    margin-bottom: 30px; 
+}
+
+/* .btn-success {
+    background-color: #59449B !important;
+    border-color: #59449B !important;
+} */
+  .btn-success{
+    height: 60px;
+    font-size:larger;
+    /* border-color: black; */
+  }
+  .btn-danger{
+    height: 60px;
+    font-size:larger;
+    /* border-color: black; */
+  }
+
+  /* CSS personalizado para asegurar que la imagen placeholder sea responsive */
+#videoFeed {
+    max-width: 100%;
+    height: auto;
+}
