@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response, jsonify, request
+from flask import Flask, render_template, Response, request, jsonify
 from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
@@ -7,9 +7,10 @@ import time
 
 app = Flask(__name__)
 
-model = load_model('C:/Users/kevin/OneDrive/one drive/Escritorio/Proyecto/model/Señas6.h5')
+model = load_model('C:/Users/kevin/OneDrive/one drive/Escritorio/Proyecto personal/Proyecto LSCH TEST 2025/model/senas7.h5')
 mp_holistic = mp.solutions.holistic
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+
 colores = np.array(['Rojo', 'Azul', 'Amarillo', 'Verde', 'Morado', 'Rosado', 'Cafe', 'Blanco', 'Negro', 'Gris', 'Naranjo'])
 preguntas = np.array(['Como', 'Como estas', 'Cual', 'Cuando', 'Cuantos', 'Donde', 'Porque', 'Que', 'Que paso'])
 saludos = np.array(['Bienvenido', 'Buenas noches', 'Buenas tardes', 'Buenos dias', 'Chao', 'Gracias', 'Hola', 'Por favor'])
@@ -20,7 +21,7 @@ actions = np.concatenate((auxiliar2, Pronombres), axis=None)
 
 sequence = []
 sentence = []
-threshold = 0.98
+threshold = 0.6
 camera_active = False
 last_prediction_time = time.time()
 prediction_interval = 2
@@ -36,12 +37,12 @@ def prob_viz(res, actions, input_frame, frame_width, frame_height):
     output_frame = input_frame.copy()
     max_prob_index = np.argmax(res)
     max_prob = res[max_prob_index]
-    
+
     if max_prob_index < len(actions):
         action = actions[max_prob_index]
     else:
         action = "Unknown"
-    
+
     # Define la posición para el rectángulo y el texto en la parte inferior izquierda
     rect_width = 250
     rect_height = 40
@@ -49,27 +50,23 @@ def prob_viz(res, actions, input_frame, frame_width, frame_height):
     start_y = frame_height - rect_height - 10  # Coordenada y inicial del rectángulo
     end_x = start_x + rect_width  # Coordenada x final del rectángulo
     end_y = frame_height - 10  # Coordenada y final del rectángulo
-    
+
     # Dibuja el rectángulo
     cv2.rectangle(output_frame, (start_x, start_y), (end_x, end_y), (50, 50, 255), -1)
-    
-    # Texto adicional "Porcentaje de probabilidad" (encima del recuadro)
+
+    # Texto adicional "Porcentaje de probabilidad" (encima del rectángulo)
     additional_text = "Porcentaje de probabilidad"
     additional_text_x = start_x + 10
     additional_text_y = start_y - 10  # Posiciona este texto justo encima del rectángulo
     cv2.putText(output_frame, additional_text, (additional_text_x, additional_text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-    
+
     # Texto de probabilidad
     prob_text = f"{action}: {max_prob * 100:.2f}%"
     text_x = start_x + 10
     text_y = start_y + rect_height - 10
     cv2.putText(output_frame, prob_text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
-    
+
     return output_frame
-
-
-
-
 
 def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -93,7 +90,9 @@ def gen(device_type):
                 ret, frame = cap.read()
                 if not ret:
                     break
-                
+
+                frame = cv2.flip(frame, 1)  # Invertir la imagen horizontalmente
+
                 frame_height, frame_width = frame.shape[:2]
 
                 image, results = mediapipe_detection(frame, holistic)
@@ -133,8 +132,6 @@ def gen(device_type):
                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
     cap.release()
-
-
 
 @app.route('/')
 def index():

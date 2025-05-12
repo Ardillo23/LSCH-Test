@@ -15,11 +15,13 @@
     <div class="container">
         <div class="row">
             <div class="col-12 d-flex flex-column align-items-center justify-content-center min-vh-100">
+                <!-- Titulo de la pagina -->
                 <h1 class="text-center mb-4"><strong>Traductor de lengua de señas</strong></h1>
-
+                <!-- Pantalla de la camara -->
                 <div class="d-flex justify-content-center mb-4">
                     <img class="img-fluid" src="{{ url_for('video_feed') }}" alt="Video Feed" id="videoFeed">
                 </div>
+                <!-- Boton de inicio y parada de la camara -->
                 <div class="d-flex justify-content-center w-100">
                     <button id="myButton" type="button" class="btn btn-success col-8 col-md-4"
                         onclick="toggleButton()">Reproducir</button>
