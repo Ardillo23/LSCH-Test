@@ -1,0 +1,16 @@
+# Entornos virtuales
+.venv/
+venv/
+
+# Cachés de Python
+__pycache__/
+*.py[cod]
+
+# Modelos y archivos grandes
+#*.h5
+*.tflite
+
+# Archivos de entorno y sistema
+.env
+.DS_Store
+Thumbs.db
